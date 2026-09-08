@@ -1,0 +1,5 @@
+# cat=basic/enable/10; type=string; label=Observer base URL (e.g. https://observer.example.com, no trailing slash)
+apiUrl =
+
+# cat=basic/enable/20; type=string; label=Site push token (printed once by `app:site:create` on the Observer)
+token =

@@ -1,0 +1,21 @@
+{
+    "name": "portrino/cms-observer-client",
+    "type": "typo3-cms-extension",
+    "description": "Reports TYPO3 core, PHP/DB version and installed extensions to a CMS Observer instance",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "typo3/cms-core": "^13.4 || ^14.3",
+        "typo3/cms-extensionmanager": "^13.4 || ^14.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Portrino\\CmsObserverClient\\": "Classes/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "cms_observer_client"
+        }
+    }
+}
