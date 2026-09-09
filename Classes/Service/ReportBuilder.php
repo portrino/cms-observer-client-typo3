@@ -13,7 +13,7 @@ class ReportBuilder
     }
 
     /**
-     * @return array{coreVersion: string, phpVersion: string, dbVersion: string, extensions: array<int, array{name: string, title: string, version: string, active: bool}>}
+     * @return array{coreVersion: string, phpVersion: string, dbVersion: string, extensions: array<int, array{name: string, title: string, version: string, active: bool, composerName: string|null}>}
      */
     public function build(): array
     {
