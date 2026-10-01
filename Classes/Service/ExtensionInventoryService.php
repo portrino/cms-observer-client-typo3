@@ -53,6 +53,6 @@ class ExtensionInventoryService
 
         $composerName = $this->packageManager->getPackage($extensionKey)->getValueFromComposerManifest('name');
 
-        return is_string($composerName) && $composerName !== '' ? $composerName : null;
+        return is_string($composerName) && '' !== $composerName ? $composerName : null;
     }
 }

@@ -16,7 +16,7 @@ class EnvironmentService
 
     public function getCoreVersion(): string
     {
-        return (new Typo3Version())->getVersion();
+        return new Typo3Version()->getVersion();
     }
 
     public function getPhpVersion(): string
