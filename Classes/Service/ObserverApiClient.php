@@ -35,6 +35,10 @@ class ObserverApiClient
         if ($apiUrl === '' || $token === '') {
             throw new \RuntimeException('CMS Observer client is not configured: set apiUrl and token in the extension settings, or the CMS_OBSERVER_API_URL and CMS_OBSERVER_TOKEN environment variables.', 1757337600);
         }
+        // The token and the version inventory must never travel in cleartext
+        if (strtolower((string)parse_url($apiUrl, PHP_URL_SCHEME)) !== 'https') {
+            throw new \RuntimeException(sprintf('CMS Observer API URL must use https, got "%s".', $apiUrl), 1757337601);
+        }
 
         $response = $this->requestFactory->request(
             rtrim($apiUrl, '/') . '/api/v1/sites/report',

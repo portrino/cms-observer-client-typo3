@@ -65,6 +65,20 @@ class ObserverApiClientTest extends TestCase
         $client->pushReport([]);
     }
 
+    public function testRefusesToSendTheTokenOverPlainHttp(): void
+    {
+        putenv('CMS_OBSERVER_API_URL=http://observer.test');
+        $client = $this->createClient(['apiUrl' => 'https://observer.test', 'token' => 'secret']);
+
+        try {
+            $client->pushReport([]);
+            self::fail('Expected an exception for a non-https API URL');
+        } catch (\RuntimeException $e) {
+            self::assertSame(1757337601, $e->getCode());
+        }
+        self::assertNull($this->sentRequest);
+    }
+
     public function testReturnsFalseWhenTheObserverDoesNotAccept(): void
     {
         $client = $this->createClient(['apiUrl' => 'https://observer.test', 'token' => 'secret'], 200);
