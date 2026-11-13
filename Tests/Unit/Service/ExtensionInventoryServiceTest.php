@@ -7,6 +7,7 @@ namespace Portrino\CmsObserverClient\Tests\Unit\Service;
 use Composer\InstalledVersions;
 use PHPUnit\Framework\TestCase;
 use Portrino\CmsObserverClient\Service\ExtensionInventoryService;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Package\MetaData;
 use TYPO3\CMS\Core\Package\PackageInterface;
 use TYPO3\CMS\Core\Package\PackageManager;
@@ -48,6 +49,18 @@ class ExtensionInventoryServiceTest extends TestCase
         self::assertSame('2.3.4', $extension['version']);
         self::assertFalse($extension['active']);
         self::assertSame('classic', $extension['title']);
+    }
+
+    public function testReportsAnEmptyMetaDataVersionAsZero(): void
+    {
+        if ((new Typo3Version())->getMajorVersion() >= 14) {
+            self::markTestSkipped('TYPO3 v14 rejects an empty package version, so the case only exists on v12/v13.');
+        }
+        $service = $this->createService([
+            $this->package('classic', 'typo3-cms-extension', '', 'vendor/not-installed'),
+        ], []);
+
+        self::assertSame('0.0.0', $service->getInstalledExtensions()[0]['version']);
     }
 
     public function testGetVersionResolvesASinglePackage(): void

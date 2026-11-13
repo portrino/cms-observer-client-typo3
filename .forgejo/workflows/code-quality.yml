@@ -9,7 +9,7 @@ on:
 
 jobs:
   code-quality:
-    name: code quality - php${{ matrix.php }}
+    name: code quality - TYPO3 ${{ matrix.typo3 }} - php${{ matrix.php }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,9 +35,14 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
+      # composer.lock isn't committed, so this resolves the newest packages of the TYPO3 version under test
       - name: Install dependencies
-        run: composer install --no-scripts
+        run: |
+          composer require --no-update "typo3/cms-core:^${{ matrix.typo3 }}"
+          composer update --no-scripts --with-all-dependencies
         env:
+          # All public TYPO3 12.4 releases are blocked by security advisories (fixes ship via ELTS only)
+          COMPOSER_NO_SECURITY_BLOCKING: ${{ matrix.typo3 == '12.4' && '1' || '0' }}
           COMPOSER_AUTH: |
             {
               "github-oauth": {
@@ -58,3 +63,4 @@ jobs:
       fail-fast: false
       matrix:
         php: [ '8.2', '8.3', '8.4', '8.5' ]
+        typo3: [ '12.4', '13.4', '14.3' ]

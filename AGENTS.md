@@ -32,7 +32,7 @@ TYPO3 12.4, 13.4 and 14.3 on PHP 8.2+. Every change must work on all of them:
   Composer mode `ext_emconf.php` is often stale, and TYPO3 v14 reports
   `1.0.0+no-version-set` when composer.json has no version. v12/v13 can report
   an empty string, which we send as `0.0.0` (v14's `MetaData::setVersion()`
-  rejects an empty string, so tests can't build that case on v14).
+  rejects an empty string, so that test is skipped on v14).
 - `dbVersion` is the server version without the platform label TYPO3 v12
   (DBAL 3) prepends (`MySQL 10.11.19-MariaDB…`), so all TYPO3 versions send
   the same format. `dbPlatform` (`mariadb`, `mysql`, `postgresql` or `null`,
@@ -77,7 +77,10 @@ extension's own dev dependencies live in `.Build/vendor`.
 
 - `ddev start`, `ddev install all` (set up the instances),
   `ddev 14 typo3 cms-observer:push --dry-run`, `ddev all <cmd>`.
-- `ddev composer ci:test`: unit tests (`Build/phpunit.xml.dist`).
+- `ddev composer ci:test`: unit tests (`Build/phpunit.xml.dist`). The CI runs
+  them and the static checks against every TYPO3 version of the support
+  matrix (`typo3/cms-core` is required per job, `composer.lock` isn't
+  committed).
 - `ddev composer ci`: composer checks (normalize, audit, dependency analyser,
   PSR-4) and static checks (Fractor, JSON/YAML lint, PHP-CS-Fixer with the
   TYPO3 coding standard, PHPStan level 8 with strict rules and cognitive
