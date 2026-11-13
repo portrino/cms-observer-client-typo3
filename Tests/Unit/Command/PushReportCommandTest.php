@@ -27,6 +27,7 @@ class PushReportCommandTest extends TestCase
             'coreVersion' => '13.4.0',
             'phpVersion' => '8.3.0',
             'dbVersion' => '11.8.0',
+            'dbPlatform' => 'mariadb',
             'clientVersion' => '1.0.0',
             'applicationContext' => 'Production/Staging',
             'extensions' => [['name' => 'news', 'title' => 'News', 'version' => '12.0.0', 'active' => true, 'composerName' => 'georgringer/news']],
@@ -62,6 +63,7 @@ class PushReportCommandTest extends TestCase
         $environment->method('getCoreVersion')->willReturn('13.4.0');
         $environment->method('getPhpVersion')->willReturn('8.3.0');
         $environment->method('getDatabaseVersion')->willReturn('11.8.0');
+        $environment->method('getDatabasePlatform')->willReturn('mariadb');
         $environment->method('getApplicationContext')->willReturn('Production/Staging');
 
         $inventory = self::createStub(ExtensionInventoryService::class);

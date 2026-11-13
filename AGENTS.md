@@ -33,6 +33,11 @@ TYPO3 12.4, 13.4 and 14.3 on PHP 8.2+. Every change must work on all of them:
   `1.0.0+no-version-set` when composer.json has no version. v12/v13 can report
   an empty string, which we send as `0.0.0` (v14's `MetaData::setVersion()`
   rejects an empty string, so tests can't build that case on v14).
+- `dbVersion` is the server version without the platform label TYPO3 v12
+  (DBAL 3) prepends (`MySQL 10.11.19-MariaDB…`), so all TYPO3 versions send
+  the same format. `dbPlatform` (`mariadb`, `mysql`, `postgresql` or `null`,
+  the endoflife.date product slugs) comes from the DBAL platform class, since
+  DBAL 4 reports no platform name in the version at all.
 - System extensions (`typo3-cms-framework`) are skipped, only third-party
   extensions are reported.
 - Configuration: extension settings `apiUrl` and `token`, overridden by the
@@ -49,8 +54,8 @@ TYPO3 12.4, 13.4 and 14.3 on PHP 8.2+. Every change must work on all of them:
 
 ```json
 {
-  "coreVersion": "13.4.0", "phpVersion": "8.3.0", "dbVersion": "11.8.0",
-  "clientVersion": "1.0.0", "applicationContext": "Production",
+  "coreVersion": "13.4.0", "phpVersion": "8.3.0", "dbVersion": "11.8.0-MariaDB",
+  "dbPlatform": "mariadb", "clientVersion": "1.0.0", "applicationContext": "Production",
   "extensions": [
     {"name": "news", "title": "News", "version": "12.0.0", "active": true, "composerName": "georgringer/news"}
   ]
