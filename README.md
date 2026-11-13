@@ -1,9 +1,11 @@
 # CMS Observer Client (TYPO3)
 
-Reports this site's TYPO3 core version, PHP/DB versions, and installed
-extensions to a central [CMS Observer](../../) instance.
+[![TYPO3 12.4 13.4 14.3](https://img.shields.io/badge/TYPO3-^12.4_||_^13.4_||_^14.3-orange.svg?logo=typo3)](https://get.typo3.org/)
+[![PHP 8.2 - 8.5](https://img.shields.io/badge/PHP-8.2_--_8.5-4f5b93.svg?logo=php)](https://www.php.net/releases/)
+[![CI](https://git.portrino.de/portrino/cms-oberserver-client-typo3/badges/workflows/ci.yml/badge.svg?branch=master)](https://git.portrino.de/portrino/cms-oberserver-client-typo3/actions?workflow=ci.yml)
 
-Supports TYPO3 12.4, 13.4 and 14.3 on PHP 8.2+.
+> Reports this site's TYPO3 core version, PHP/DB versions, and installed
+> extensions to a central [CMS Observer](https://git.portrino.de/portrino/cms-oberserver) instance.
 
 ## Install
 
