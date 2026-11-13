@@ -1,0 +1,6 @@
+/.* export-ignore
+/Build export-ignore
+/Documentation export-ignore
+/Tests export-ignore
+/AGENTS.md export-ignore
+/CLAUDE.md export-ignore
