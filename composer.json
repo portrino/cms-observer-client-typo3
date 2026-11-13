@@ -1,21 +1,146 @@
 {
-    "name": "portrino/cms-observer-client",
+    "name": "portrino/cms-observer-client-typo3",
+    "description": "CMS Observer Client - Reports TYPO3 core, PHP/DB version and installed extensions to a CMS Observer instance",
+    "license": "GPL-2.0-or-later",
     "type": "typo3-cms-extension",
-    "description": "Reports TYPO3 core, PHP/DB version and installed extensions to a CMS Observer instance",
-    "license": "MIT",
+    "keywords": [
+        "TYPO3",
+        "extension"
+    ],
+    "authors": [
+        {
+            "name": "Axel B\u00f6swetter",
+            "role": "Developer"
+        }
+    ],
     "require": {
-        "php": "^8.3",
-        "typo3/cms-core": "^13.4 || ^14.3",
-        "typo3/cms-extensionmanager": "^13.4 || ^14.3"
+        "php": "^8.2",
+        "composer-runtime-api": "^2.0",
+        "symfony/console": "^6.4 || ^7.0",
+        "typo3/cms-core": "^12.4 || ^13.4 || ^14.3"
+    },
+    "require-dev": {
+        "a9f/fractor-composer-json": "^1.0",
+        "a9f/typo3-fractor": "^1.0",
+        "armin/editorconfig-cli": "^2.2",
+        "ergebnis/composer-normalize": "^2.30",
+        "friendsofphp/php-cs-fixer": "^3.14",
+        "helmich/typo3-typoscript-lint": "^3.1",
+        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "phpunit/phpunit": "^11.5",
+        "psr/http-message": "^1.1 || ^2.0",
+        "seld/jsonlint": "^1.9",
+        "shipmonk/composer-dependency-analyser": "^1.8",
+        "spaze/phpstan-disallowed-calls": "^4.0",
+        "ssch/typo3-rector": "^3.0",
+        "tomasvotruba/cognitive-complexity": "^1.0",
+        "tomasvotruba/type-coverage": "^2.0",
+        "typo3/coding-standards": "^0.9"
     },
     "autoload": {
         "psr-4": {
             "Portrino\\CmsObserverClient\\": "Classes/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Portrino\\CmsObserverClient\\Tests\\": "Tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "a9f/fractor-extension-installer": true,
+            "ergebnis/composer-normalize": true,
+            "typo3/class-alias-loader": false,
+            "typo3/cms-composer-installers": false
+        },
+        "bin-dir": ".Build/bin",
+        "platform": {
+            "php": "8.2.0"
+        },
+        "vendor-dir": ".Build/vendor"
+    },
     "extra": {
         "typo3/cms": {
-            "extension-key": "cms_observer_client"
+            "app-dir": ".Build",
+            "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "extension-key": "cms_observer_client",
+            "version": "1.0.0",
+            "web-dir": ".Build/public"
         }
+    },
+    "scripts": {
+        "ci": [
+            "@ci:composer",
+            "@ci:static"
+        ],
+        "ci:composer": [
+            "@ci:composer:analyze-dependencies",
+            "@ci:composer:audit",
+            "@ci:composer:normalize",
+            "@ci:composer:psr-verify"
+        ],
+        "ci:composer:analyze-dependencies": "./.Build/bin/composer-dependency-analyser",
+        "ci:composer:audit": "@composer audit --abandoned=ignore --ignore-unreachable",
+        "ci:composer:normalize": "@composer normalize --no-check-lock --dry-run",
+        "ci:composer:psr-verify": "@composer dumpautoload --optimize --strict-psr",
+        "ci:editorconfig:lint": "./.Build/bin/ec --git-only",
+        "ci:fractor": "./.Build/bin/fractor process --ansi --config ./Build/fractor.php --dry-run --no-progress-bar",
+        "ci:json:lint": "find . ! -path '*.Build/*' ! -path '*node_modules/*' -name '*.json' | xargs -r php .Build/bin/jsonlint -q",
+        "ci:php": [
+            "@ci:php:cs-fixer",
+            "@ci:php:lint",
+            "@ci:php:rector",
+            "@ci:php:stan"
+        ],
+        "ci:php:cs-fixer": "./.Build/bin/php-cs-fixer fix --config ./Build/php-cs-fixer.php -v --dry-run --using-cache no --diff",
+        "ci:php:lint": "find .*.php *.php Classes Configuration Tests -name '*.php' -print0 | xargs -r -0 -n 1 -P 4 php -l",
+        "ci:php:rector": "./.Build/bin/rector process --ansi --config ./Build/rector.php --dry-run --no-progress-bar",
+        "ci:php:stan": "./.Build/bin/phpstan analyse -c ./Build/phpstan.neon --no-progress",
+        "ci:static": [
+            "@ci:fractor",
+            "@ci:json:lint",
+            "@ci:php:cs-fixer",
+            "@ci:php:lint",
+            "@ci:php:stan",
+            "@ci:ts:lint",
+            "@ci:yaml:lint"
+        ],
+        "ci:test": "./.Build/bin/phpunit -c ./Build/phpunit.xml.dist",
+        "ci:ts:lint": "[ -d Configuration/TypoScript ] && ./.Build/bin/typoscript-lint -c ./Build/typoscript-lint.yaml --ansi -n --fail-on-warnings -vvv Configuration/ || echo 'No TypoScript files found.'",
+        "ci:yaml:lint": "find . ! -path '*.Build/*' ! -path '*node_modules/*' -regextype egrep -regex '.*.ya?ml$' | xargs -r php ./.Build/bin/yaml-lint",
+        "fix:fractor": "./.Build/bin/fractor process --ansi --config ./Build/fractor.php --no-progress-bar",
+        "fix:php": [
+            "@fix:php:cs"
+        ],
+        "fix:php:cs": "./.Build/bin/php-cs-fixer fix --config ./Build/php-cs-fixer.php",
+        "fix:php:rector": "./.Build/bin/rector process --ansi --config ./Build/rector.php --no-progress-bar",
+        "prepare-release": [
+            "rm -rf .Build",
+            "rm -rf .github",
+            "rm -rf Build",
+            "rm -rf Tests",
+            "rm .editorconfig",
+            "rm .gitattributes",
+            "rm .gitignore"
+        ]
+    },
+    "scripts-descriptions": {
+        "ci": "Runs all dynamic and static code checks.",
+        "ci:composer:normalize": "Checks the composer.json.",
+        "ci:composer:psr-verify": "Verifies PSR-4 namespace correctness.",
+        "ci:json:lint": "Lints the JSON files.",
+        "ci:php": "Runs all static checks for the PHP files.",
+        "ci:php:copypaste": "Checks for copy'n'pasted PHP code.",
+        "ci:php:cs-fixer": "Checks the code style with the PHP Coding Standards Fixer (PHP-CS-Fixer).",
+        "ci:php:lint": "Lints the PHP files for syntax errors.",
+        "ci:php:stan": "Checks the PHP types using PHPStan.",
+        "ci:static": "Runs all static code checks (syntax, style, types).",
+        "ci:ts:lint": "Lints the TypoScript files.",
+        "ci:yaml:lint": "Lints the YAML files.",
+        "fix:php": "Runs all fixers for the PHP code.",
+        "fix:php:cs": "Fixes the code style with PHP-CS-Fixer."
     }
 }

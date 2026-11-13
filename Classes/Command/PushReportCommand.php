@@ -9,6 +9,7 @@ use Portrino\CmsObserverClient\Service\ReportBuilder;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -22,10 +23,21 @@ class PushReportCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Print the report as JSON instead of sending it');
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $report = $this->reportBuilder->build();
+
+        if ($input->getOption('dry-run') === true) {
+            $output->writeln(json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+
+            return Command::SUCCESS;
+        }
 
         try {
             $accepted = $this->apiClient->pushReport($report);
