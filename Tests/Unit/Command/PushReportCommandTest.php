@@ -57,6 +57,17 @@ class PushReportCommandTest extends TestCase
         self::assertSame(Command::FAILURE, $tester->execute([]));
     }
 
+    public function testFailsWithTheErrorMessageWhenSendingThrows(): void
+    {
+        $apiClient = self::createStub(ObserverApiClient::class);
+        $apiClient->method('pushReport')->willThrowException(new \RuntimeException('Connection refused'));
+
+        $tester = new CommandTester(new PushReportCommand($this->createReportBuilder(), $apiClient));
+
+        self::assertSame(Command::FAILURE, $tester->execute([]));
+        self::assertStringContainsString('Connection refused', $tester->getDisplay());
+    }
+
     private function createReportBuilder(): ReportBuilder
     {
         $environment = self::createStub(EnvironmentService::class);
