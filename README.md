@@ -21,7 +21,7 @@ composer require portrino/cms-observer-client-typo3
    ```
 2. In the TYPO3 backend, go to **Admin Tools > Settings > Extension
    Configuration > cms_observer_client** and set:
-   - `apiUrl` – the Observer's base URL (no trailing slash)
+   - `apiUrl` – the Observer's base URL, must use `https://` (no trailing slash)
    - `token` – the token from step 1
 
    Alternatively set the environment variables `CMS_OBSERVER_API_URL` and

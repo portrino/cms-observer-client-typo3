@@ -45,6 +45,8 @@ TYPO3 12.4, 13.4 and 14.3 on PHP 8.2+. Every change must work on all of them:
   (so a committed `settings.php` can serve several environments). If the
   extension has no configuration at all, `ExtensionConfiguration::get()`
   throws; the client then falls back to the environment variables.
+- The API URL must use https (the token and the version inventory must
+  never travel in cleartext); the client refuses to send otherwise.
 - HTTP timeout is set explicitly (10 s): TYPO3's default is `0` (wait forever),
   which would hang the scheduler when the Observer is unreachable.
 
