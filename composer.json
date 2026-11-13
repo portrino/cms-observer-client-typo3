@@ -119,12 +119,15 @@
         "fix:php:rector": "./.Build/bin/rector process --ansi --config ./Build/rector.php --no-progress-bar",
         "prepare-release": [
             "rm -rf .Build",
+            "rm -rf .forgejo",
             "rm -rf .github",
             "rm -rf Build",
             "rm -rf Tests",
             "rm .editorconfig",
             "rm .gitattributes",
-            "rm .gitignore"
+            "rm .gitignore",
+            "rm AGENTS.md",
+            "rm CLAUDE.md"
         ]
     },
     "scripts-descriptions": {
