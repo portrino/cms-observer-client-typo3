@@ -2,6 +2,7 @@
 
 $config = \TYPO3\CodingStandards\CsFixerConfig::create();
 $config->getFinder()->in(['Classes', 'Configuration', 'Tests']);
+$config->setCacheFile(__DIR__ . '/../.Build/.php-cs-fixer.cache');
 
 //$copyRightHeader = <<<EOF
 //This file is part of the "Impersonate" Extension for TYPO3 CMS.
