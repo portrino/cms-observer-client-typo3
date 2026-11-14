@@ -68,7 +68,7 @@
             "app-dir": ".Build",
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
             "extension-key": "cms_observer_client",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "web-dir": ".Build/public"
         }
     },
