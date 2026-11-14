@@ -16,7 +16,7 @@ versions to a central [CMS Observer](https://github.com/portrino/cms-oberserver)
 > useless. So setup your central CMS Observer instance first and then connect any number of TYPO3 instances by using 
 > this client.
 
-## Installation
+## 🔥 Installation
 
 ### Composer
 
@@ -36,7 +36,7 @@ or
 
 * Download the zip file from [TYPO3 extension repository (TER)](https://extensions.typo3.org/extension/cms_observer_client).
 
-## Configuration
+## 🔧 Configuration
 
 1. On the Observer, register a new site (using command line or web interface) and copy the printed token:
    ```
