@@ -12,7 +12,7 @@ class ReportBuilder
     ) {}
 
     /**
-     * @return array{coreVersion: string, phpVersion: string, dbVersion: string, dbPlatform: string|null, clientVersion: string, applicationContext: string, extensions: array<int, array{name: string, title: string, version: string, active: bool, composerName: string|null}>}
+     * @return array{coreVersion: string, phpVersion: string, dbVersion: string, dbPlatform: string|null, clientVersion: string, applicationContext: string, domains: list<string>, extensions: array<int, array{name: string, title: string, version: string, active: bool, composerName: string|null}>}
      */
     public function build(): array
     {
@@ -23,6 +23,7 @@ class ReportBuilder
             'dbPlatform' => $this->environmentService->getDatabasePlatform(),
             'clientVersion' => $this->extensionInventoryService->getVersion('cms_observer_client'),
             'applicationContext' => $this->environmentService->getApplicationContext(),
+            'domains' => $this->environmentService->getDomains(),
             'extensions' => $this->extensionInventoryService->getInstalledExtensions(),
         ];
     }

@@ -11,11 +11,13 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Site\SiteFinder;
 
 class EnvironmentService
 {
     public function __construct(
         private readonly ConnectionPool $connectionPool,
+        private readonly SiteFinder $siteFinder,
     ) {}
 
     public function getCoreVersion(): string
@@ -54,6 +56,28 @@ class EnvironmentService
             $platform instanceof PostgreSQLPlatform => 'postgresql',
             default => null,
         };
+    }
+
+    /**
+     * Hosts of all site and language bases, so the Observer can reject reports from a copy of the
+     * site (e.g. staging) that pushes with the production token. Relative bases ("/") have no host.
+     *
+     * @return list<string>
+     */
+    public function getDomains(): array
+    {
+        $hosts = [];
+        foreach ($this->siteFinder->getAllSites() as $site) {
+            $hosts[] = $site->getBase()->getHost();
+            foreach ($site->getAllLanguages() as $language) {
+                $hosts[] = $language->getBase()->getHost();
+            }
+        }
+        // TYPO3's Uri keeps the host's case from the site configuration
+        $hosts = array_unique(array_filter(array_map(strtolower(...), $hosts), static fn(string $host): bool => $host !== ''));
+        sort($hosts);
+
+        return $hosts;
     }
 
     public function getApplicationContext(): string

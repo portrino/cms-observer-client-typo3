@@ -51,6 +51,15 @@ or
    `CMS_OBSERVER_TOKEN`. They take precedence over the extension
    configuration, so a shared `settings.php` can serve several environments.
 
+> [!TIP]
+> Set the token per environment via `CMS_OBSERVER_TOKEN`, and give staging its
+> own site on the Observer (or no token at all). Otherwise a staging copy, e.g.
+> one whose scheduler task came along with a production database dump, reports
+> as production. As a safety net the client sends the domains of all site
+> configurations, and the Observer rejects reports whose domains don't match
+> the site's URL. That only helps if staging has its own domain (e.g. via
+> `baseVariants`).
+
 ## 🚀 Run
 
 ```bash

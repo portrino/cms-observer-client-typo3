@@ -7,6 +7,7 @@ namespace Portrino\CmsObserverClient\Tests\Unit\Service;
 use PHPUnit\Framework\TestCase;
 use Portrino\CmsObserverClient\Service\ObserverApiClient;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Http\RequestFactory;
@@ -26,7 +27,7 @@ class ObserverApiClientTest extends TestCase
     {
         $client = $this->createClient(['apiUrl' => 'https://observer.test/', 'token' => ' secret ']);
 
-        self::assertTrue($client->pushReport(['coreVersion' => '13.4.0']));
+        $client->pushReport(['coreVersion' => '13.4.0']);
 
         [$url, $method, $options] = $this->sentRequest;
         self::assertSame('https://observer.test/api/v1/sites/report', $url);
@@ -54,7 +55,8 @@ class ObserverApiClientTest extends TestCase
         putenv('CMS_OBSERVER_TOKEN=env-token');
         $client = $this->createClient(null);
 
-        self::assertTrue($client->pushReport([]));
+        $client->pushReport([]);
+        self::assertNotNull($this->sentRequest);
     }
 
     public function testThrowsWhenNothingIsConfigured(): void
@@ -79,20 +81,34 @@ class ObserverApiClientTest extends TestCase
         self::assertNull($this->sentRequest);
     }
 
-    public function testReturnsFalseWhenTheObserverDoesNotAccept(): void
+    public function testThrowsWithTheObserversMessageWhenTheReportIsRejected(): void
     {
-        $client = $this->createClient(['apiUrl' => 'https://observer.test', 'token' => 'secret'], 200);
+        $client = $this->createClient(['apiUrl' => 'https://observer.test', 'token' => 'secret'], 409, '{"status":"rejected","reason":"domain_mismatch","message":"Report from staging.example.com does not match the site URL https://example.com"}');
 
-        self::assertFalse($client->pushReport([]));
+        $this->expectExceptionCode(1757337602);
+        $this->expectExceptionMessage('CMS Observer rejected the report (HTTP 409): Report from staging.example.com does not match the site URL https://example.com');
+        $client->pushReport([]);
+    }
+
+    public function testThrowsWithTheReasonPhraseWhenTheRejectionHasNoMessage(): void
+    {
+        $client = $this->createClient(['apiUrl' => 'https://observer.test', 'token' => 'secret'], 200, '<html>OK</html>');
+
+        $this->expectExceptionMessage('CMS Observer rejected the report (HTTP 200): Reason');
+        $client->pushReport([]);
     }
 
     /**
      * @param array<string, string>|null $config null = extension not configured at all
      */
-    private function createClient(?array $config, int $statusCode = 202): ObserverApiClient
+    private function createClient(?array $config, int $statusCode = 202, string $body = ''): ObserverApiClient
     {
         $response = self::createStub(ResponseInterface::class);
         $response->method('getStatusCode')->willReturn($statusCode);
+        $response->method('getReasonPhrase')->willReturn('Reason');
+        $stream = self::createStub(StreamInterface::class);
+        $stream->method('__toString')->willReturn($body);
+        $response->method('getBody')->willReturn($stream);
 
         $requestFactory = self::createStub(RequestFactory::class);
         $requestFactory->method('request')->willReturnCallback(function (string $url, string $method, array $options) use ($response) {

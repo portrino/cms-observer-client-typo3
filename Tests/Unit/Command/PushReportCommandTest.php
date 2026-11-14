@@ -30,6 +30,7 @@ class PushReportCommandTest extends TestCase
             'dbPlatform' => 'mariadb',
             'clientVersion' => '1.0.0',
             'applicationContext' => 'Production/Staging',
+            'domains' => ['example.com'],
             'extensions' => [['name' => 'news', 'title' => 'News', 'version' => '12.0.0', 'active' => true, 'composerName' => 'georgringer/news']],
         ], json_decode($tester->getDisplay(), true, flags: JSON_THROW_ON_ERROR));
     }
@@ -38,23 +39,12 @@ class PushReportCommandTest extends TestCase
     {
         $apiClient = $this->createMock(ObserverApiClient::class);
         $apiClient->expects($this->once())->method('pushReport')
-            ->with(self::callback(static fn(array $report) => $report['clientVersion'] === '1.0.0'))
-            ->willReturn(true);
+            ->with(self::callback(static fn(array $report) => $report['clientVersion'] === '1.0.0'));
 
         $tester = new CommandTester(new PushReportCommand($this->createReportBuilder(), $apiClient));
 
         self::assertSame(Command::SUCCESS, $tester->execute([]));
         self::assertStringContainsString('1 extensions', $tester->getDisplay());
-    }
-
-    public function testFailsWhenTheObserverRejectsTheReport(): void
-    {
-        $apiClient = self::createStub(ObserverApiClient::class);
-        $apiClient->method('pushReport')->willReturn(false);
-
-        $tester = new CommandTester(new PushReportCommand($this->createReportBuilder(), $apiClient));
-
-        self::assertSame(Command::FAILURE, $tester->execute([]));
     }
 
     public function testFailsWithTheErrorMessageWhenSendingThrows(): void
@@ -76,6 +66,7 @@ class PushReportCommandTest extends TestCase
         $environment->method('getDatabaseVersion')->willReturn('11.8.0');
         $environment->method('getDatabasePlatform')->willReturn('mariadb');
         $environment->method('getApplicationContext')->willReturn('Production/Staging');
+        $environment->method('getDomains')->willReturn(['example.com']);
 
         $inventory = self::createStub(ExtensionInventoryService::class);
         $inventory->method('getVersion')->willReturn('1.0.0');

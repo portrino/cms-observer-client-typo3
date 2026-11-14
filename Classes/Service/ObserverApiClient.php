@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Portrino\CmsObserverClient\Service;
 
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Http\RequestFactory;
@@ -21,7 +22,34 @@ class ObserverApiClient
     /**
      * @param array<string, mixed> $report
      */
-    public function pushReport(array $report): bool
+    public function pushReport(array $report): void
+    {
+        [$apiUrl, $token] = $this->resolveSettings();
+
+        $response = $this->requestFactory->request(
+            rtrim($apiUrl, '/') . '/api/v1/sites/report',
+            'POST',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json',
+                ],
+                'body' => json_encode($report, JSON_THROW_ON_ERROR),
+                'timeout' => self::TIMEOUT_SECONDS,
+                // Guzzle would cut the Observer's error message short, so the status is checked here
+                'http_errors' => false,
+            ]
+        );
+
+        if ($response->getStatusCode() !== 202) {
+            throw new \RuntimeException(sprintf('CMS Observer rejected the report (HTTP %d): %s', $response->getStatusCode(), $this->rejectionMessage($response)), 1757337602);
+        }
+    }
+
+    /**
+     * @return array{string, string} API URL and token
+     */
+    private function resolveSettings(): array
     {
         try {
             $config = (array)$this->extensionConfiguration->get('cms_observer_client');
@@ -40,20 +68,14 @@ class ObserverApiClient
             throw new \RuntimeException(sprintf('CMS Observer API URL must use https, got "%s".', $apiUrl), 1757337601);
         }
 
-        $response = $this->requestFactory->request(
-            rtrim($apiUrl, '/') . '/api/v1/sites/report',
-            'POST',
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                    'Content-Type' => 'application/json',
-                ],
-                'body' => json_encode($report, JSON_THROW_ON_ERROR),
-                'timeout' => self::TIMEOUT_SECONDS,
-            ]
-        );
+        return [$apiUrl, $token];
+    }
 
-        return $response->getStatusCode() === 202;
+    private function rejectionMessage(ResponseInterface $response): string
+    {
+        $body = json_decode((string)$response->getBody(), true);
+
+        return is_array($body) && is_string($body['message'] ?? null) ? $body['message'] : $response->getReasonPhrase();
     }
 
     private function setting(string $envName, mixed $configValue): string

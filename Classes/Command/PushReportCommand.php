@@ -40,15 +40,9 @@ class PushReportCommand extends Command
         }
 
         try {
-            $accepted = $this->apiClient->pushReport($report);
+            $this->apiClient->pushReport($report);
         } catch (\Throwable $e) {
             $io->error($e->getMessage());
-
-            return Command::FAILURE;
-        }
-
-        if (!$accepted) {
-            $io->error('CMS Observer rejected the report.');
 
             return Command::FAILURE;
         }

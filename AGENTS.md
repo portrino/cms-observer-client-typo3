@@ -47,6 +47,13 @@ TYPO3 12.4, 13.4 and 14.3 on PHP 8.2+. Every change must work on all of them:
   throws; the client then falls back to the environment variables.
 - The API URL must use https (the token and the version inventory must
   never travel in cleartext); the client refuses to send otherwise.
+- `domains` lists the hosts of all site and language bases (resolved
+  `baseVariants` included, relative bases like `/` have none). The Observer
+  rejects a report with `409` when none matches the site's URL, e.g. a staging
+  copy pushing with the production token; with an empty or missing `domains`
+  it accepts the report unchecked.
+- Any status other than `202` throws with the `message` from the Observer's
+  JSON response, so the scheduler log says why a report was rejected.
 - HTTP timeout is set explicitly (10 s): TYPO3's default is `0` (wait forever),
   which would hang the scheduler when the Observer is unreachable.
 
@@ -58,6 +65,7 @@ TYPO3 12.4, 13.4 and 14.3 on PHP 8.2+. Every change must work on all of them:
 {
   "coreVersion": "13.4.0", "phpVersion": "8.3.0", "dbVersion": "11.8.0-MariaDB",
   "dbPlatform": "mariadb", "clientVersion": "1.0.0", "applicationContext": "Production",
+  "domains": ["www.example.com"],
   "extensions": [
     {"name": "news", "title": "News", "version": "12.0.0", "active": true, "composerName": "georgringer/news"}
   ]
