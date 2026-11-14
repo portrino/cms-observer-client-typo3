@@ -1,21 +1,44 @@
-# CMS Observer Client (TYPO3)
+# TYPO3 Extension `cms_observer_client`
 
-[![TYPO3 12.4 13.4 14.3](https://img.shields.io/badge/TYPO3-^12.4_||_^13.4_||_^14.3-orange.svg?logo=typo3)](https://get.typo3.org/)
+[![Latest Stable Version](https://poser.pugx.org/portrino/cms-observer-client-typo3/v/stable)](https://packagist.org/packages/portrino/cms-observer-client-typo3)
+[![TYPO3 12.4 13.4 14.3](https://img.shields.io/badge/TYPO3-12.4_|_13.4_|_14.3-orange.svg?logo=typo3)](https://get.typo3.org/)
 [![PHP 8.2 - 8.5](https://img.shields.io/badge/PHP-8.2_--_8.5-4f5b93.svg?logo=php)](https://www.php.net/releases/)
-[![CI](https://git.portrino.de/portrino/cms-oberserver-client-typo3/badges/workflows/ci.yml/badge.svg?branch=master)](https://git.portrino.de/portrino/cms-oberserver-client-typo3/actions?workflow=ci.yml)
+[![Total Downloads](https://poser.pugx.org/portrino/cms-observer-client-typo3/downloads)](https://packagist.org/packages/portrino/cms-observer-client-typo3)
+[![Monthly Downloads](https://poser.pugx.org/portrino/cms-observer-client-typo3/d/monthly)](https://packagist.org/packages/portrino/cms-observer-client-typo3)
+[![License](https://poser.pugx.org/portrino/cms-observer-client-typo3/license)](https://packagist.org/packages/portrino/cms-observer-client-typo3)
+[![CI](https://github.com/portrino/cms-observer-client-typo3/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/portrino/cms-observer-client-typo3/actions/workflows/ci.yml)
 
-> Reports this site's TYPO3 core version, PHP/DB versions, and installed
-> extensions to a central [CMS Observer](https://git.portrino.de/portrino/cms-oberserver) instance.
+This extension provides a client to report a site's TYPO3 core version, PHP + DB versions, and installed extension 
+versions to a central [CMS Observer](https://github.com/portrino/cms-oberserver) instance.
 
-## Install
+> [!IMPORTANT]
+> Without a central [CMS Observer](https://github.com/portrino/cms-oberserver) instance this extension is somewhat 
+> useless. So setup your central CMS Observer instance first and then connect any number of TYPO3 instances by using 
+> this client.
 
-```
+## Installation
+
+### Composer
+
+The **recommended** way to install the extension is using [composer](https://getcomposer.org/).
+
+Run the following command within your Composer based TYPO3 project:
+
+```bash
 composer require portrino/cms-observer-client-typo3
 ```
 
-## Configure
+### TER
 
-1. On the Observer, register this site and copy the printed token:
+* Open the TYPO3 Extension Manager, search for `cms_observer_client` and install the extension.
+
+or 
+
+* Download the zip file from [TYPO3 extension repository (TER)](https://extensions.typo3.org/extension/cms_observer_client).
+
+## Configuration
+
+1. On the Observer, register a new site (using command line or web interface) and copy the printed token:
    ```
    php bin/console app:site:create "<name>" typo3 "<site-url>"
    ```
@@ -28,9 +51,9 @@ composer require portrino/cms-observer-client-typo3
    `CMS_OBSERVER_TOKEN`. They take precedence over the extension
    configuration, so a shared `settings.php` can serve several environments.
 
-## Run
+## 🚀 Run
 
-```
+```bash
 vendor/bin/typo3 cms-observer:push
 ```
 
@@ -39,22 +62,15 @@ commands** task type (command: `cms-observer:push`), or via system cron.
 
 To check what would be sent without sending it:
 
-```
+```bash
 vendor/bin/typo3 cms-observer:push --dry-run
 ```
 
-## Development
+## 💎 Credits
 
-Uses DDEV with one TYPO3 instance per supported version (`.Build/12`,
-`.Build/13`, `.Build/14`):
+This project is highly inspired by the [t3monitoring_client](https://github.com/georgringer/t3monitoring_client) and
+the SYSSY monitoring with its [syssy-typo3-extension](https://gitlab.com/syssy-typo3-extension/syssy).
 
-```
-ddev start
-ddev composer ci:test     # unit tests
-ddev composer ci          # composer checks + static analysis
-ddev install all          # set up the TYPO3 instances
-ddev 14 typo3 cms-observer:push --dry-run
-```
+## 🧑‍💻 Contributing
 
-Keep the version in `ext_emconf.php` and `extra.typo3/cms.version` in
-`composer.json` in sync with the release tag.
+Please have a look at [`CONTRIBUTING.md`](CONTRIBUTING.md).
