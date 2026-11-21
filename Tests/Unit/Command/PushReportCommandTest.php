@@ -31,7 +31,7 @@ class PushReportCommandTest extends TestCase
             'clientVersion' => '1.0.0',
             'applicationContext' => 'Production/Staging',
             'domains' => ['example.com'],
-            'extensions' => [['name' => 'news', 'title' => 'News', 'version' => '12.0.0', 'active' => true, 'composerName' => 'georgringer/news']],
+            'packages' => [['name' => 'news', 'type' => 'extension', 'title' => 'News', 'version' => '12.0.0', 'active' => true, 'composerName' => 'georgringer/news']],
         ], json_decode($tester->getDisplay(), true, flags: JSON_THROW_ON_ERROR));
     }
 
@@ -71,7 +71,7 @@ class PushReportCommandTest extends TestCase
         $inventory = self::createStub(ExtensionInventoryService::class);
         $inventory->method('getVersion')->willReturn('1.0.0');
         $inventory->method('getInstalledExtensions')->willReturn([
-            ['name' => 'news', 'title' => 'News', 'version' => '12.0.0', 'active' => true, 'composerName' => 'georgringer/news'],
+            ['name' => 'news', 'type' => 'extension', 'title' => 'News', 'version' => '12.0.0', 'active' => true, 'composerName' => 'georgringer/news'],
         ]);
 
         return new ReportBuilder($environment, $inventory);

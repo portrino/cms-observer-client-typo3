@@ -66,16 +66,21 @@ TYPO3 12.4, 13.4 and 14.3 on PHP 8.2+. Every change must work on all of them:
   "coreVersion": "13.4.0", "phpVersion": "8.3.0", "dbVersion": "11.8.0-MariaDB",
   "dbPlatform": "mariadb", "clientVersion": "1.0.0", "applicationContext": "Production",
   "domains": ["www.example.com"],
-  "extensions": [
-    {"name": "news", "title": "News", "version": "12.0.0", "active": true, "composerName": "georgringer/news"}
+  "packages": [
+    {"name": "news", "type": "extension", "title": "News", "version": "12.0.0", "active": true, "composerName": "georgringer/news"}
   ]
 }
 ```
 
+`packages` (since 2.0.0, needs CMS Observer 0.7.0 or newer; 1.x sent the
+same list as `extensions`): every third-party extension with `type`
+`extension`. The list is complete: the Observer removes what's missing from it.
+
 Success is HTTP `202`. Sites update the client late or never, so the Observer
-must keep accepting older payloads: add new fields as optional, never rename or
-remove one. Coordinate payload changes with the Observer repository (its
-`SiteReportRequest` DTO).
+keeps accepting older payloads (it still takes `extensions` from 1.x). A new
+client may require a newer Observer: say so in the README and here, and bump
+the major version. Coordinate payload changes with the Observer repository
+(its `SiteReportRequest` DTO).
 
 ## Workflow
 

@@ -15,7 +15,7 @@ class ExtensionInventoryService
     ) {}
 
     /**
-     * @return array<int, array{name: string, title: string, version: string, active: bool, composerName: string|null}>
+     * @return array<int, array{name: string, type: string, title: string, version: string, active: bool, composerName: string|null}>
      */
     public function getInstalledExtensions(): array
     {
@@ -31,6 +31,7 @@ class ExtensionInventoryService
             $key = $package->getPackageKey();
             $extensions[] = [
                 'name' => $key,
+                'type' => 'extension',
                 'title' => $metaData->getTitle() ?? $key,
                 'version' => $this->resolveVersion($package),
                 'active' => $this->packageManager->isPackageActive($key),

@@ -23,7 +23,7 @@ class ExtensionInventoryServiceTest extends TestCase
         ], ['news']);
 
         self::assertSame([
-            ['name' => 'news', 'title' => 'News', 'version' => '12.0.0', 'active' => true, 'composerName' => null],
+            ['name' => 'news', 'type' => 'extension', 'title' => 'News', 'version' => '12.0.0', 'active' => true, 'composerName' => null],
         ], $service->getInstalledExtensions());
     }
 

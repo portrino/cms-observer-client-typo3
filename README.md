@@ -16,6 +16,8 @@ versions to a central [CMS Observer](https://github.com/portrino/cms-oberserver)
 > useless. So setup your central CMS Observer instance first and then connect any number of TYPO3 instances by using 
 > this client.
 
+Needs CMS Observer 0.7.0 or newer (version 1.x of this extension works with older ones).
+
 ## 🔥 Installation
 
 ### Composer

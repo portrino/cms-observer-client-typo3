@@ -51,7 +51,7 @@ class PushReportCommand extends Command
             'Reported core %s, PHP %s, %d extensions to CMS Observer.',
             $report['coreVersion'],
             $report['phpVersion'],
-            count($report['extensions'])
+            count($report['packages'])
         ));
 
         return Command::SUCCESS;

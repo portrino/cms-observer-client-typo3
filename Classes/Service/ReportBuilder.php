@@ -12,7 +12,9 @@ class ReportBuilder
     ) {}
 
     /**
-     * @return array{coreVersion: string, phpVersion: string, dbVersion: string, dbPlatform: string|null, clientVersion: string, applicationContext: string, domains: list<string>, extensions: array<int, array{name: string, title: string, version: string, active: bool, composerName: string|null}>}
+     * "packages" with their "type" needs CMS Observer 0.7.0 or newer.
+     *
+     * @return array{coreVersion: string, phpVersion: string, dbVersion: string, dbPlatform: string|null, clientVersion: string, applicationContext: string, domains: list<string>, packages: array<int, array{name: string, type: string, title: string, version: string, active: bool, composerName: string|null}>}
      */
     public function build(): array
     {
@@ -24,7 +26,7 @@ class ReportBuilder
             'clientVersion' => $this->extensionInventoryService->getVersion('cms_observer_client'),
             'applicationContext' => $this->environmentService->getApplicationContext(),
             'domains' => $this->environmentService->getDomains(),
-            'extensions' => $this->extensionInventoryService->getInstalledExtensions(),
+            'packages' => $this->extensionInventoryService->getInstalledExtensions(),
         ];
     }
 }
