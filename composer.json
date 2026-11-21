@@ -87,9 +87,9 @@
         "ci:composer:audit": "@composer audit --abandoned=ignore --ignore-unreachable",
         "ci:composer:normalize": "@composer normalize --no-check-lock --dry-run",
         "ci:composer:psr-verify": "@composer dumpautoload --optimize --strict-psr",
-        "ci:editorconfig:lint": "./.Build/bin/ec --git-only",
+        "ci:editorconfig:lint": "./.Build/bin/ec --git-only --git-only-cmd=\"git ls-files -- . ':!:.ddev'\"",
         "ci:fractor": "./.Build/bin/fractor process --ansi --config ./Build/fractor.php --dry-run --no-progress-bar",
-        "ci:json:lint": "find . ! -path '*.Build/*' ! -path '*node_modules/*' -name '*.json' | xargs -r php .Build/bin/jsonlint -q",
+        "ci:json:lint": "find . ! -path '*.Build/*' ! -path './.ddev/*' ! -path '*node_modules/*' -name '*.json' | xargs -r php .Build/bin/jsonlint -q",
         "ci:php": [
             "@ci:php:cs-fixer",
             "@ci:php:lint",
@@ -110,7 +110,7 @@
             "@ci:yaml:lint"
         ],
         "ci:ts:lint": "[ -d Configuration/TypoScript ] && ./.Build/bin/typoscript-lint -c ./Build/typoscript-lint.yaml --ansi -n --fail-on-warnings -vvv Configuration/ || echo 'No TypoScript files found.'",
-        "ci:yaml:lint": "find . ! -path '*.Build/*' ! -path '*node_modules/*' -regextype egrep -regex '.*.ya?ml$' | xargs -r php ./.Build/bin/yaml-lint",
+        "ci:yaml:lint": "find . ! -path '*.Build/*' ! -path './.ddev/*' ! -path '*node_modules/*' -regextype egrep -regex '.*.ya?ml$' | xargs -r php ./.Build/bin/yaml-lint",
         "fix": [
             "@fix:fractor",
             "@fix:php"
