@@ -9,10 +9,10 @@
 [![CI](https://github.com/portrino/cms-observer-client-typo3/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/portrino/cms-observer-client-typo3/actions/workflows/ci.yml)
 
 This extension provides a client to report a site's TYPO3 core version, PHP + DB versions, and installed extension 
-versions to a central [CMS Observer](https://github.com/portrino/cms-oberserver) instance.
+versions to a central [CMS Observer](https://github.com/portrino/cms-observer) instance.
 
 > [!IMPORTANT]
-> Without a central [CMS Observer](https://github.com/portrino/cms-oberserver) instance this extension is somewhat 
+> Without a central [CMS Observer](https://github.com/portrino/cms-observer) instance this extension is somewhat 
 > useless. So setup your central CMS Observer instance first and then connect any number of TYPO3 instances by using 
 > this client.
 
