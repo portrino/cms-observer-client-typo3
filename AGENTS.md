@@ -90,6 +90,8 @@ extension's own dev dependencies live in `.Build/vendor`.
 
 - `ddev start`, `ddev install all` (set up the instances),
   `ddev 14 typo3 cms-observer:push --dry-run`, `ddev all <cmd>`.
+- Run curl and other HTTP probes (the Observer, external APIs) inside the
+  container (`ddev exec curl ...`), not on the host.
 - `ddev composer test:unit`: unit tests (`Build/phpunit.xml.dist`;
   `test:unit:coverage` adds coverage reports in `.Build/coverage`). The CI runs
   them and the static checks against every TYPO3 version of the support
