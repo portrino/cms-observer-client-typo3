@@ -51,6 +51,15 @@ class ExtensionInventoryServiceTest extends TestCase
         self::assertSame('classic', $extension['title']);
     }
 
+    public function testReportsTheExtensionKeyAsTitleWhenTheTitleIsEmpty(): void
+    {
+        $service = $this->createService([
+            $this->package('site_package', 'typo3-cms-extension', '1.0.0', null, ''),
+        ], ['site_package']);
+
+        self::assertSame('site_package', $service->getInstalledExtensions()[0]['title']);
+    }
+
     public function testReportsAnEmptyMetaDataVersionAsZero(): void
     {
         if ((new Typo3Version())->getMajorVersion() >= 14) {

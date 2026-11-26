@@ -33,6 +33,8 @@ class ObserverApiClient
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                     'Content-Type' => 'application/json',
+                    // without it the Observer answers a validation error with an HTML page
+                    'Accept' => 'application/json',
                 ],
                 'body' => json_encode($report, JSON_THROW_ON_ERROR),
                 'timeout' => self::TIMEOUT_SECONDS,
@@ -73,9 +75,11 @@ class ObserverApiClient
 
     private function rejectionMessage(ResponseInterface $response): string
     {
-        $body = json_decode((string)$response->getBody(), true);
+        $body = (array)json_decode((string)$response->getBody(), true);
+        // "message" for a domain mismatch (409), "detail" names the invalid field of a validation error (422)
+        $message = $body['message'] ?? $body['detail'] ?? null;
 
-        return is_array($body) && is_string($body['message'] ?? null) ? $body['message'] : $response->getReasonPhrase();
+        return is_string($message) ? $message : $response->getReasonPhrase();
     }
 
     private function setting(string $envName, mixed $configValue): string

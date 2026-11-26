@@ -32,7 +32,8 @@ class ExtensionInventoryService
             $extensions[] = [
                 'name' => $key,
                 'type' => 'extension',
-                'title' => $metaData->getTitle() ?? $key,
+                // site packages often have an empty title, which older Observers reject as blank
+                'title' => self::nonEmpty($metaData->getTitle()) ?? $key,
                 'version' => $this->resolveVersion($package),
                 'active' => $this->packageManager->isPackageActive($key),
                 'composerName' => $this->getComposerName($package),
@@ -60,7 +61,7 @@ class ExtensionInventoryService
         // v12/v13 report an empty string for extensions without any version
         $metaDataVersion = $package->getPackageMetaData()->getVersion();
 
-        return $installedVersion ?? ($metaDataVersion !== '' ? $metaDataVersion : '0.0.0');
+        return $installedVersion ?? self::nonEmpty($metaDataVersion) ?? '0.0.0';
     }
 
     /**
@@ -72,6 +73,11 @@ class ExtensionInventoryService
     {
         $composerName = $package->getValueFromComposerManifest('name');
 
-        return is_string($composerName) && $composerName !== '' ? $composerName : null;
+        return is_string($composerName) ? self::nonEmpty($composerName) : null;
+    }
+
+    private static function nonEmpty(?string $value): ?string
+    {
+        return $value === '' ? null : $value;
     }
 }

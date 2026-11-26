@@ -33,6 +33,7 @@ class ObserverApiClientTest extends TestCase
         self::assertSame('https://observer.test/api/v1/sites/report', $url);
         self::assertSame('POST', $method);
         self::assertSame('Bearer secret', $options['headers']['Authorization']);
+        self::assertSame('application/json', $options['headers']['Accept']);
         self::assertSame('{"coreVersion":"13.4.0"}', $options['body']);
         self::assertGreaterThan(0, $options['timeout']);
     }
@@ -87,6 +88,14 @@ class ObserverApiClientTest extends TestCase
 
         $this->expectExceptionCode(1757337602);
         $this->expectExceptionMessage('CMS Observer rejected the report (HTTP 409): Report from staging.example.com does not match the site URL https://example.com');
+        $client->pushReport([]);
+    }
+
+    public function testThrowsWithTheInvalidFieldWhenTheReportFailsValidation(): void
+    {
+        $client = $this->createClient(['apiUrl' => 'https://observer.test', 'token' => 'secret'], 422, '{"type":"https://symfony.com/errors/validation","title":"Validation Failed","status":422,"detail":"packages[10].title: This value should not be blank.","violations":[]}');
+
+        $this->expectExceptionMessage('CMS Observer rejected the report (HTTP 422): packages[10].title: This value should not be blank.');
         $client->pushReport([]);
     }
 

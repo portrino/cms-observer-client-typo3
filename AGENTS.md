@@ -53,7 +53,13 @@ TYPO3 12.4, 13.4 and 14.3 on PHP 8.2+. Every change must work on all of them:
   copy pushing with the production token; with an empty or missing `domains`
   it accepts the report unchecked.
 - Any status other than `202` throws with the `message` from the Observer's
-  JSON response, so the scheduler log says why a report was rejected.
+  JSON response (or its `detail`, which names the invalid field of a `422`),
+  so the scheduler log says why a report was rejected. The client sends
+  `Accept: application/json`; without it the Observer answers a `422` with
+  an HTML page.
+- An extension with an empty title (common for site packages) is reported
+  with its extension key as title: older Observers reject a blank
+  title with `422`.
 - HTTP timeout is set explicitly (10 s): TYPO3's default is `0` (wait forever),
   which would hang the scheduler when the Observer is unreachable.
 
