@@ -5,7 +5,6 @@
 [![PHP 8.2 - 8.5](https://img.shields.io/badge/PHP-8.2_--_8.5-4f5b93.svg?logo=php)](https://www.php.net/releases/)
 [![Total Downloads](https://poser.pugx.org/portrino/cms-observer-client-typo3/downloads)](https://packagist.org/packages/portrino/cms-observer-client-typo3)
 [![Monthly Downloads](https://poser.pugx.org/portrino/cms-observer-client-typo3/d/monthly)](https://packagist.org/packages/portrino/cms-observer-client-typo3)
-[![License](https://poser.pugx.org/portrino/cms-observer-client-typo3/license)](https://packagist.org/packages/portrino/cms-observer-client-typo3)
 [![CI](https://github.com/portrino/cms-observer-client-typo3/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/portrino/cms-observer-client-typo3/actions/workflows/ci.yml)
 
 This extension provides a client to report a site's TYPO3 core version, PHP + DB versions, and installed extension 
