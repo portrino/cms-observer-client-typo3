@@ -83,6 +83,23 @@ ddev 13 composer install
 ddev 14 typo3 cms-observer:push --dry-run
 ```
 
+## Push to a local CMS Observer
+
+The instances push real reports to the E2E site of a local
+[CMS Observer](https://github.com/portrino/cms-observer) without any token to copy: `ddev install` sets the API URL
+`https://e2e.cms-observer.ddev.site` and the fixed token of the project the Observer creates for each TYPO3 instance
+([list of tokens](https://github.com/portrino/cms-observer/blob/main/CONTRIBUTING.md#run-tests)).
+
+```bash
+# Once, in the cms-observer repository (DDEV running): its E2E database with the test projects
+ddev e2e-reset
+
+# Here
+ddev 13 typo3 cms-observer:push
+```
+
+The report shows at `https://e2e.cms-observer.ddev.site` (`e2e@example.test` / `e2e-password`). An instance installed before this setup needs a new `ddev install <version>`; the Observer's `ddev e2e-reset` deletes everything that was reported there.
+
 ## Submit a pull request
 
 After completing your work, **open a pull request** and provide a description of your changes. Ideally, your PR should reference an issue that explains the problem you are addressing.
