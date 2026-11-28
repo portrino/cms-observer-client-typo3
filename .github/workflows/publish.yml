@@ -20,6 +20,6 @@ jobs:
         run: git fetch --force origin "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}"
 
       - name: "Publish new version to TER"
-        uses: tomasnorre/typo3-upload-ter@45877fb28167bf38efda42ddd484824d7f273cca # v2.3.0
+        uses: tomasnorre/typo3-upload-ter@132ddc8ca5bb71bab752685a33f89d241050b446 # v4.0.0
         with:
           api-token: ${{ secrets.TYPO3_API_TOKEN }}
