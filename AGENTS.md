@@ -96,6 +96,12 @@ extension's own dev dependencies live in `.Build/vendor`.
 
 - `ddev start`, `ddev install all` (set up the instances),
   `ddev 14 typo3 cms-observer:push --dry-run`, `ddev all <cmd>`.
+- The instances push to the local Observer's E2E site
+  (`https://e2e.cms-observer.ddev.site`, reached via `external_links` in
+  `.ddev/docker-compose.zz-project.yaml`): the install hook
+  `.ddev/.setup/hooks/post-install.sh` sets its API URL and the fixed token
+  `e2e-typo3-<version>` of the project `ddev e2e-reset` creates there. So
+  `ddev 13 typo3 cms-observer:push` works once the Observer runs.
 - Run curl and other HTTP probes (the Observer, external APIs) inside the
   container (`ddev exec curl ...`), not on the host.
 - `ddev composer test:unit`: unit tests (`Build/phpunit.xml.dist`;

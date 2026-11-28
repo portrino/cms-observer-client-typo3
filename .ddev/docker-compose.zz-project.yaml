@@ -14,3 +14,8 @@ services:
             - EXTENSION_NAME=cms-observer-client-typo3
             - PACKAGE_NAME=portrino/cms-observer-client-typo3
             - TYPO3_VERSIONS=12 13 14
+        # the local CMS Observer and its E2E site, which the instances push to
+        # (.ddev/.setup/hooks/post-install.sh)
+        external_links:
+            - ddev-router:cms-observer.ddev.site
+            - ddev-router:e2e.cms-observer.ddev.site
